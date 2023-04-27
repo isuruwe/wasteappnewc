@@ -1,0 +1,512 @@
+﻿<script>
+    var map, popup, Popup, mydata;
+    var myVar = setInterval(myTimer, 10000);
+
+    function tailScroll() {
+        var height = $("#tail").get(0).scrollHeight;
+        $("#tail").animate({
+            scrollTop: height
+        }, 1000);
+    }
+
+    function myTimer() {
+        var client = new HttpClient();
+        client.get('http://203.115.24.227:8888/gbs/getgbs.ashx?p1=1', function (response) {
+            // debugger;
+
+            var fields = response.replace(/[""]/g, '*');
+
+            fields = fields.split('*');
+            //alert(fields);
+            mydata = JSON.parse(response);
+            //alert(mydata.toString());
+            //var   myJsonString = JSON.stringify(mydata);
+            //alert(mydata.Table[0].tempi);
+            // alert(mydata["0"].humi);
+            // alert(mydata["0"].distan);
+            //alert(mydata["0"].createddate);
+
+            // document.getElementById("ticker1").innerHTML = mydata.Table[0].distan + "% Filled";
+            document.getElementById("d1").innerHTML = parseInt(((147-(mydata.Table[0].distan-75))/147)*100) + "%";
+            document.getElementById("d").innerHTML = "Filled :" + parseInt(((147 - (mydata.Table[0].distan - 75)) / 147) * 100) + "%";
+            document.getElementById("fbin").innerHTML = "Food Bin :" + parseInt(((147 - (mydata.Table[0].distan - 75)) / 147) * 100) + "%";
+            document.getElementById("t").innerHTML = "Temp :" + mydata.Table[0].tempi + "C";
+            document.getElementById("h").innerHTML = "Humi :" + mydata.Table[0].humi + "%";
+            //('#easypiechart-red').data("percent", mydata.Table[0].distan);
+           // $("easypiechart-green").attr("data-percent", mydata.Table[0].distan);
+            $('#easypiechart-green').data('easyPieChart').update(parseInt(((147 - (mydata.Table[0].distan - 75)) / 147) * 100));
+            $("<div />").text("Stn CBO: Food Bin:" + parseInt(((147 - (mydata.Table[0].distan - 75)) / 147) * 100) + "% Filled").appendTo("#tail");
+            tailScroll();
+            //  document.getElementById('dbin').setAttribute("style", mydata.Table[0].distan);
+            // document.getElementById("dbin").style.height = mydata.Table[0].distan;
+            //document.getElementById("lv1").style.height = mydata.Table[0].distan;
+        });
+
+        client.get('http://203.115.24.227:8888/gbs/getgbs.ashx?p1=2', function (response) {
+            // debugger;
+
+            var fields = response.replace(/[""]/g, '*');
+
+            fields = fields.split('*');
+            //alert(fields);
+            mydata = JSON.parse(response);
+            //alert(mydata.toString());
+            //var   myJsonString = JSON.stringify(mydata);
+            //alert(mydata.Table[0].tempi);
+            // alert(mydata["0"].humi);
+            // alert(mydata["0"].distan);
+            //alert(mydata["0"].createddate);
+
+            // document.getElementById("ticker1").innerHTML = mydata.Table[0].distan + "% Filled";
+            document.getElementById("dblue").innerHTML = parseInt(((100 - (mydata.Table[0].distan - 70)) / 100) * 100) + "%";
+            document.getElementById("d2").innerHTML = "Filled :" + parseInt(((100 - (mydata.Table[0].distan - 70)) / 100) * 100) + "%";
+            document.getElementById("pbin").innerHTML = "Paper Bin :" + parseInt(((100 - (mydata.Table[0].distan - 70)) / 100) * 100) + "%";
+           // document.getElementById("t1").innerHTML = "Temp :" + mydata.Table[0].tempi + "C";
+           // document.getElementById("h1").innerHTML = "Humi :" + mydata.Table[0].humi + "%";
+            //('#easypiechart-red').data("percent", mydata.Table[0].distan);
+            // $("easypiechart-green").attr("data-percent", mydata.Table[0].distan);
+            $('#easypiechart-red').data('easyPieChart').update(parseInt(((100 - (mydata.Table[0].distan - 70)) / 100) * 100));
+            $("<div />").text("Stn CBO: Paper Bin:" + parseInt(((100 - (mydata.Table[0].distan - 70)) / 100) * 100) + "% Filled").appendTo("#tail");
+            tailScroll();
+            //  document.getElementById('dbin').setAttribute("style", mydata.Table[0].distan);
+            // document.getElementById("dbin").style.height = mydata.Table[0].distan;
+            //document.getElementById("lv1").style.height = mydata.Table[0].distan;
+        });
+        client.get('http://203.115.24.227:8888/gbs/getgbs.ashx?p1=3', function (response) {
+            //debugger;
+
+            var fields = response.replace(/[""]/g, '*');
+
+            fields = fields.split('*');
+            //alert(fields);
+            mydata = JSON.parse(response);
+            //alert(mydata.toString());
+            //var   myJsonString = JSON.stringify(mydata);
+            //alert(mydata.Table[0].tempi);
+            // alert(mydata["0"].humi);
+            // alert(mydata["0"].distan);
+            //alert(mydata["0"].createddate);
+
+            // document.getElementById("ticker1").innerHTML = mydata.Table[0].distan + "% Filled";
+
+            // $("<div />").text("Stn CBO: Solid Bin:" + mydata.Table[0].distan + "% Filled").appendTo("#tail");
+            // tailScroll();
+            //  document.getElementById('dbin').setAttribute("style", mydata.Table[0].distan);
+            // document.getElementById("dbin").style.height = mydata.Table[0].distan;
+            //document.getElementById("lv1").style.height = mydata.Table[0].distan;
+        });
+
+
+      
+    }
+
+
+    /** Initializes the map and the custom popup. */
+    function initMap() {
+
+        definePopupClass();
+        var client = new HttpClient();
+
+        client.get('http://203.115.24.227:8888/gbs/getgbs.ashx?p1=1', function (response) {
+            //  debugger;
+
+            var fields = response.replace(/[""]/g, '*');
+
+            fields = fields.split('*');
+            //alert(fields);
+            mydata = JSON.parse(response);
+            //alert(mydata.toString());
+            //var   myJsonString = JSON.stringify(mydata);
+            //alert(mydata.Table[0].tempi);
+            // alert(mydata["0"].humi);
+            // alert(mydata["0"].distan);
+            //alert(mydata["0"].createddate);
+            //  document.getElementById("t").innerHTML ="Temp:"+ mydata.Table[0].tempi;
+            document.getElementById("d1").innerHTML = parseInt(((222 - mydata.Table[0].distan) / 222) * 100) + "%";
+            document.getElementById("d").innerHTML = "Filled :" + parseInt(((222 - mydata.Table[0].distan) / 222) * 100) + "%";
+            //('#easypiechart-red').data("percent", mydata.Table[0].distan);
+            $("easypiechart-green").attr("data-percent", parseInt(((222 - mydata.Table[0].distan) / 222) * 100));
+            $('#easypiechart-green').data('easyPieChart').update(parseInt(((222 - mydata.Table[0].distan) / 222) * 100));
+            //   document.getElementById("dt").innerHTML="Time:" + mydata.Table[0].createddate;
+            map = new google.maps.Map(document.getElementById('map'), {
+
+                zoom: 13,
+                center: { lat: 6.9252347, lng: 79.8550717 },
+                mapTypeId: 'satellite'
+            });
+            popup = new Popup(
+
+            new google.maps.LatLng(6.9252347, 79.8550717), document.getElementById('content'));
+            popup.setMap(map);
+
+        });
+
+        client.get('http://203.115.24.227:8888/gbs/getgbs.ashx?p1=2', function (response) {
+            //debugger;
+
+            var fields = response.replace(/[""]/g, '*');
+
+            fields = fields.split('*');
+            //alert(fields);
+            mydata = JSON.parse(response);
+            //alert(mydata.toString());
+            //var   myJsonString = JSON.stringify(mydata);
+            //alert(mydata.Table[0].tempi);
+            // alert(mydata["0"].humi);
+            // alert(mydata["0"].distan);
+            //alert(mydata["0"].createddate);
+            //  document.getElementById("t1").innerHTML = "Temp:" + mydata.Table[0].tempi;
+            //   document.getElementById("h1").innerHTML = "Humi:" + mydata.Table[0].humi;
+            //   document.getElementById("d1").innerHTML = "Distance:" + mydata.Table[0].distan;
+            //   document.getElementById("dt1").innerHTML = "Time:" + mydata.Table[0].createddate;
+
+            popup = new Popup(
+
+            new google.maps.LatLng(6.9552347, 79.8750717), document.getElementById('content1'));
+            popup.setMap(map);
+
+        });
+
+        client.get('http://203.115.24.227:8888/gbs/getgbs.ashx?p1=3', function (response) {
+            //debugger;
+
+            var fields = response.replace(/[""]/g, '*');
+
+            fields = fields.split('*');
+            //alert(fields);
+            mydata = JSON.parse(response);
+            //alert(mydata.toString());
+            //var   myJsonString = JSON.stringify(mydata);
+            //alert(mydata.Table[0].tempi);
+            // alert(mydata["0"].humi);
+            // alert(mydata["0"].distan);
+            //alert(mydata["0"].createddate);
+            //   document.getElementById("t3").innerHTML = "Temp:" + mydata.Table[0].tempi;
+            //  document.getElementById("h3").innerHTML = "Humi:" + mydata.Table[0].humi;
+            //  document.getElementById("d3").innerHTML = "Distance:" + mydata.Table[0].distan;
+            //   document.getElementById("dt3").innerHTML = "Time:" + mydata.Table[0].createddate;
+
+            popup = new Popup(
+
+            new google.maps.LatLng(6.9752347, 79.8950717), document.getElementById('content3'));
+            popup.setMap(map);
+
+        });
+    }
+    var HttpClient = function () {
+        this.get = function (aUrl, aCallback) {
+
+            var anHttpRequest = new XMLHttpRequest();
+            anHttpRequest.onreadystatechange = function () {
+                if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
+                    aCallback(anHttpRequest.responseText);
+            }
+
+            anHttpRequest.open("GET", aUrl, true);
+            anHttpRequest.send(null);
+        }
+    }
+    /** Defines the Popup class. */
+    function definePopupClass() {
+        /**
+        * A customized popup on the map.
+        // * aram {!google.maps.LatLng} position
+        // * param {!Element} content
+        // * constructor
+        // * extends {google.maps.OverlayView}
+        // */
+        Popup = function (position, content) {
+            this.position = position;
+
+            content.classList.add('popup-bubble-content');
+
+            var pixelOffset = document.createElement('div');
+            pixelOffset.classList.add('popup-bubble-anchor');
+            pixelOffset.appendChild(content);
+
+            this.anchor = document.createElement('div');
+            this.anchor.classList.add('popup-tip-anchor');
+            this.anchor.appendChild(pixelOffset);
+
+            // Optionally stop clicks, etc., from bubbling up to the map.
+            this.stopEventPropagation();
+        };
+        // NOTE: google.maps.OverlayView is only defined once the Maps API has
+        // loaded. That is why Popup is defined inside initMap().
+        Popup.prototype = Object.create(google.maps.OverlayView.prototype);
+
+        /** Called when the popup is added to the map. */
+        Popup.prototype.onAdd = function () {
+            this.getPanes().floatPane.appendChild(this.anchor);
+        };
+
+        /** Called when the popup is removed from the map. */
+        Popup.prototype.onRemove = function () {
+            if (this.anchor.parentElement) {
+                this.anchor.parentElement.removeChild(this.anchor);
+            }
+        };
+
+        /** Called when the popup needs to draw itself. */
+        Popup.prototype.draw = function () {
+            var divPosition = this.getProjection().fromLatLngToDivPixel(this.position);
+            // Hide the popup when it is far out of view.
+            var display =
+            Math.abs(divPosition.x) < 4000 && Math.abs(divPosition.y) < 4000 ?
+                  'block' :
+                  'none';
+
+            if (display === 'block') {
+                this.anchor.style.left = divPosition.x + 'px';
+                this.anchor.style.top = divPosition.y + 'px';
+            }
+            if (this.anchor.style.display !== display) {
+                this.anchor.style.display = display;
+            }
+        };
+
+        /** Stops clicks/drags from bubbling up to the map. */
+        Popup.prototype.stopEventPropagation = function () {
+            var anchor = this.anchor;
+            anchor.style.cursor = 'auto';
+
+            ['click', 'dblclick', 'contextmenu', 'wheel', 'mousedown', 'touchstart',
+             'pointerdown']
+                .forEach(function (event) {
+                    anchor.addEventListener(event, function (e) {
+                        e.stopPropagation();
+                    });
+                });
+        };
+    }
+</script>
+<script async="" defer=""
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAhzrilThVeKGILy6rAQlOcyME8DVEvW2M&callback=initMap">
+</script>
+<div class="dashboard-cards">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4">
+
+            <div class="card horizontal cardIcon waves-effect waves-dark">
+                <div class="card-image green">
+                    <i class="material-icons dp48">delete</i>
+                </div>
+                <div class="card-stacked green">
+                    <div class="card-content">
+                        <h3 id="d"></h3>
+                    </div>
+                    <div class="card-action">
+                        <strong>Food Bin</strong>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4">
+
+            <div class="card horizontal cardIcon waves-effect waves-dark">
+                <div class="card-image red">
+                    <i class="material-icons dp48">delete</i>
+                </div>
+                <div class="card-stacked red">
+                    <div class="card-content">
+                        <h3 id="d2">Filled : 0%</h3>
+                    </div>
+                    <div class="card-action">
+                        <strong>Polythene Bin</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-4">
+
+            <div class="card horizontal cardIcon waves-effect waves-dark">
+                <div class="card-image blue">
+                    <i class="material-icons dp48">delete</i>
+                </div>
+                <div class="card-stacked blue">
+                    <div class="card-content">
+                        <h3 id="d3">Filled : 0%</h3>
+                    </div>
+                    <div class="card-action">
+                        <strong>Paper Bin</strong>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- /. ROW  -->
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="cirStats">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-4">
+                    <div class="card-panel text-center">
+                        <h4>Food</h4>
+                        <div class="easypiechart" id="easypiechart-green">
+                            <span id="d1" class="percent"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4">
+                    <div class="card-panel text-center">
+                        <h4>Polythene</h4>
+                        <div class="easypiechart" id="easypiechart-red" data-percent="0">
+                            <span id="dblue" class="percent"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4">
+                    <div class="card-panel text-center">
+                        <h4>Paper</h4>
+                        <div class="easypiechart" id="easypiechart-blue" data-percent="0">
+                            <span class="percent">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--/.row-->
+
+</div>
+
+<div class="row">
+    <div id="map" class="col-lg-12" style="border-radius:2px; height:400px; ">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12" style="min-height:400px;background-color:#fff;background-color:#000000;">
+        <div class="col-lg-4" id="tail" style="background-color:#000000; font-family:Calibri; color:#fff; font-size:12px; min-height:400px;">
+        </div>
+       
+    </div>
+</div>
+
+<div id="content">
+    <span id="t"></span>
+    <br />
+    <span id="h"></span>
+    <br />
+    <span style="font:15px;" id="fbin"></span>
+    <br />
+    <span id="pbin"></span>
+    <br />
+    <span id="dt"></span>
+    <br />
+</div>
+<div id="content1" hidden="hidden">
+    <span id="t1"></span>
+    <br />
+    <span id="h1"></span>
+    <br />
+    
+    <span id="dt1"></span>
+    <br />
+</div>
+<div id="content3">
+    <span id="t3"></span>
+    <br />
+    <span id="h3"></span>
+    <br />
+    <span id="d3"></span>
+    <br />
+    <span id="dt3"></span>
+    <br />
+</div>
+<style>
+    .container {
+        margin-top: 0px;
+    }
+
+    #tail {
+        height: 200px;
+        overflow: hidden;
+    }
+
+    .progress-bar-vertical {
+        width: 20px;
+        min-height: 100px;
+        display: flex;
+        align-items: flex-end;
+        margin-left: auto;
+        margin-right: auto;
+        float: left;
+    }
+
+        .progress-bar-vertical .progress-bar {
+            width: 100%;
+            height: 0;
+            -webkit-transition: height 1s ease;
+            -o-transition: height 1s ease;
+            transition: height 1s ease;
+        }
+</style>
+<style>
+    /* Always set the map height explicitly to define the size of the div
+    * element that contains the map. */
+    #map {
+        height: 100%;
+    }
+    /* Optional: Makes the sample page fill the window. */
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    /* The location pointed to by the popup tip. */
+    .popup-tip-anchor {
+        height: 0;
+        position: absolute;
+        /* The max width of the info window. */
+        width: 200px;
+    }
+    /* The bubble is anchored above the tip. */
+    .popup-bubble-anchor {
+        position: absolute;
+        width: 100%;
+        bottom: /* TIP_HEIGHT= */ 8px;
+        left: 0;
+    }
+        /* Draw the tip. */
+        .popup-bubble-anchor::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            /* Center the tip horizontally. */
+            transform: translate(-50%, 0);
+            /* The tip is a https://css-tricks.com/snippets/css/css-triangle/ */
+            width: 0;
+            height: 0;
+            /* The tip is 8px high, and 12px wide. */
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: /* TIP_HEIGHT= */ 8px solid white;
+        }
+    /* The popup bubble itself. */
+    .popup-bubble-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translate(-50%, -100%);
+        /* Style the info window. */
+        background-color: white;
+        padding: 5px;
+        border-radius: 5px;
+        font-family: sans-serif;
+        overflow-y: auto;
+        max-height: 60px;
+        box-shadow: 0px 2px 10px 1px rgba(0,0,0,0.5);
+    }
+</style>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>

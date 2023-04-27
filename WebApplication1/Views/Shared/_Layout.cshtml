@@ -1,0 +1,37 @@
+﻿<html>
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+
+<body style="margin-top:0px !important; padding-top:0px !important;">
+    <!-- Sidebar -->
+    <div class="w3-sidebar w3-light-grey w3-bar-block" style="width:15%">
+        <h3 class="w3-bar-item">Menu</h3>
+        <a href="#" class="w3-bar-item w3-button" style="text-decoration:none;" >Colombo</a>
+        <a href="#" class="w3-bar-item w3-button" style="text-decoration:none;">Rathmalan</a>
+        <a href="#" class="w3-bar-item w3-button" style="text-decoration:none;">Katunayake</a>
+    </div>
+
+    <!-- Page Content -->
+    <div style="margin-left:15%">
+        <div class="container body-content">
+            @RenderBody()
+            <hr />
+            <footer style="font-family:Calibri; font-size:12px;">
+                <p>&copy; @DateTime.Now.Year Designed and Develop by ITU, all rights reserved.</p>
+            </footer>
+        </div>
+    </div>
+
+</body>
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("scripts", required: false)
+</html>
